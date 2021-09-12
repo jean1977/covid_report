@@ -27,6 +27,8 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 		// TODO Auto-generated method stub
 		
+
+		
 		String linkNazionale = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv";
 		String linkRegionale = "https://github.com/pcm-dpc/COVID-19/blob/master/dati-regioni/dpc-covid19-ita-regioni.csv?raw=true";
 		
@@ -222,9 +224,9 @@ public class Main {
 
 		
 		postiDisponibili.put("Abruzzo",new PostiLetto(1324,177));
-		postiDisponibili.put("Basilicata",new PostiLetto(366,88));
-		postiDisponibili.put("Calabria",new PostiLetto(957,172));
-		postiDisponibili.put("Campania",new PostiLetto(3849,548));
+		postiDisponibili.put("Basilicata",new PostiLetto(362,88));
+		postiDisponibili.put("Calabria",new PostiLetto(964,174));
+		postiDisponibili.put("Campania",new PostiLetto(3511,555));
 		postiDisponibili.put("Emilia-Romagna",new PostiLetto(7920,889));
 		postiDisponibili.put("Friuli Venezia Giulia",new PostiLetto(1277,175));
 		postiDisponibili.put("Lazio",new PostiLetto(6421,943));
@@ -237,7 +239,7 @@ public class Main {
 		postiDisponibili.put("Piemonte",new PostiLetto(5824,628));
 		postiDisponibili.put("Puglia",new PostiLetto(2741,482));
 		postiDisponibili.put("Sardegna",new PostiLetto(1602,204));
-		postiDisponibili.put("Sicilia",new PostiLetto(3669,881));
+		postiDisponibili.put("Sicilia",new PostiLetto(3726,882));
 		postiDisponibili.put("Toscana",new PostiLetto(5033,570));
 		postiDisponibili.put("Umbria",new PostiLetto(684,91));
 		postiDisponibili.put("Valle d'Aosta",new PostiLetto(83,33));
