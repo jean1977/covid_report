@@ -80,5 +80,17 @@ public class PostiLetto {
 		return  oggi.getNonTi() - ieri.getNonTi();
 		//return percenutaleOccupazioneNonTi(ieri) - percenutaleOccupazioneNonTi(oggi);
 	}
+	
+	public String occupazioneTi(PostiLetto disponibili)
+	{
+		return this.getTi()+"/"+disponibili.getTi();
+	}
+
+	public String occupazioneNonTi(PostiLetto disponibili)
+	{
+		return this.getNonTi()+"/"+disponibili.getNonTi();
+	}
+
+	
 
 }

@@ -21,15 +21,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 		// TODO Auto-generated method stub
-		
+
 
 		
-		String linkNazionale = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv";
+		String linkNazionale = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv";
 		String linkRegionale = "https://github.com/pcm-dpc/COVID-19/blob/master/dati-regioni/dpc-covid19-ita-regioni.csv?raw=true";
 		
 		URL urlRegionale = new URL(linkRegionale); 
@@ -37,6 +41,13 @@ public class Main {
 		
 		File fileRegione = new File("d:\\file_covid\\dpc-covid19-ita-regioni.csv");
 		File fileNazione = new File("d:\\file_covid\\dpc-covid19-ita-andamento-nazionale.csv");
+		File fileOccupazione = new File("d:\\file_covid\\Portale Covid-19.html");
+		
+		
+		Map<String, PostiLetto> postiDisponibili = new HashMap<String, PostiLetto>();
+		
+		postiDisponibili = LeggiPostiLetto(fileOccupazione);
+		
 		
 		
 		FileUtils.copyURLToFile(urlRegionale, fileRegione);
@@ -217,34 +228,40 @@ public class Main {
 		   
 		}
 		
-		Map<String, PostiLetto> postiDisponibili = new HashMap<String, PostiLetto>();
+		
 		
 	     
 		Map<String, Occupazioni> occupazionePosti = new HashMap<String, Occupazioni>();
 
 		
-		postiDisponibili.put("Abruzzo",new PostiLetto(1324,177));
+		
+		/*
+		postiDisponibili.put("Abruzzo",new PostiLetto(1324,181));
 		postiDisponibili.put("Basilicata",new PostiLetto(362,88));
-		postiDisponibili.put("Calabria",new PostiLetto(964,174));
-		postiDisponibili.put("Campania",new PostiLetto(3511,555));
+		postiDisponibili.put("Calabria",new PostiLetto(967,181));
+		postiDisponibili.put("Campania",new PostiLetto(3528,520));
 		postiDisponibili.put("Emilia-Romagna",new PostiLetto(7920,889));
 		postiDisponibili.put("Friuli Venezia Giulia",new PostiLetto(1277,175));
 		postiDisponibili.put("Lazio",new PostiLetto(6421,943));
-		postiDisponibili.put("Liguria",new PostiLetto(1695,218));
-		postiDisponibili.put("Lombardia",new PostiLetto(6369,1530));
-		postiDisponibili.put("Marche",new PostiLetto(971,212));
+		postiDisponibili.put("Liguria",new PostiLetto(1711,217));
+		postiDisponibili.put("Lombardia",new PostiLetto(6616,1530));
+		postiDisponibili.put("Marche",new PostiLetto(966,246));
 		postiDisponibili.put("Molise",new PostiLetto(176,39));
 		postiDisponibili.put("P.A. Bolzano",new PostiLetto(500,100));
 		postiDisponibili.put("P.A. Trento",new PostiLetto(517,90));
 		postiDisponibili.put("Piemonte",new PostiLetto(5824,628));
-		postiDisponibili.put("Puglia",new PostiLetto(2741,482));
+		postiDisponibili.put("Puglia",new PostiLetto(2722,482));
 		postiDisponibili.put("Sardegna",new PostiLetto(1602,204));
-		postiDisponibili.put("Sicilia",new PostiLetto(3726,882));
+		postiDisponibili.put("Sicilia",new PostiLetto(3576,867));
 		postiDisponibili.put("Toscana",new PostiLetto(5033,570));
-		postiDisponibili.put("Umbria",new PostiLetto(684,91));
-		postiDisponibili.put("Valle d'Aosta",new PostiLetto(83,33));
-		postiDisponibili.put("Veneto",new PostiLetto(6000,1000));
+		postiDisponibili.put("Umbria",new PostiLetto(662,88));
+		postiDisponibili.put("Valle d'Aosta",new PostiLetto(99,33));
+		postiDisponibili.put("Veneto",new PostiLetto(6000,1000));*/
 
+		
+		
+		
+		
 
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);            
@@ -264,8 +281,9 @@ public class Main {
 			occupazionePosti.put(entry.getKey(), new Occupazioni(letto.calcolaPercentualeOccupazioneTi(entry.getValue())
 																	,letto.calcolaIncrementoPercentualeTi(occupazioneIeriMap.get(entry.getKey()), letto) 
 																	,letto.calcolaPercentualeOccupazioneNonTi(entry.getValue())
-																	,letto.calcolaIncrementoPercentualeNonTi(occupazioneIeriMap.get(entry.getKey()), letto))
-																	); 
+																	,letto.calcolaIncrementoPercentualeNonTi(occupazioneIeriMap.get(entry.getKey()), letto)
+																	,letto.occupazioneTi(postiDisponibili.get(entry.getKey()))
+																	,letto.occupazioneNonTi(postiDisponibili.get(entry.getKey())))); 
 			
 		}
 
@@ -287,6 +305,13 @@ public class Main {
 		}
 		
 		
+		for (Map.Entry<String, Occupazioni> entry : occupazionePosti.entrySet())
+		{
+			System.out.println(entry.getKey() + "         " + entry.getValue().getOccupazioneTi());
+			System.out.println(entry.getKey() + "         " + entry.getValue().getOccupazioneNonTi());
+			
+		}
+		
 
 
 
@@ -304,6 +329,10 @@ public class Main {
 				+ "td     {font-family: verdana; "
 				+ "		   padding: 3px;"
 				+ "}"
+				+ ".vl {"
+				+ "			  border-left: 6px solid green;"
+				+ "			  height: 500px;"
+				+ "		}"
 				+ "</style>"
 				+ "</head>"
 				+ ""
@@ -359,18 +388,36 @@ public class Main {
 		htmlWriter.write("<table border=1>");
 		htmlWriter.write("<tr>");
 				htmlWriter.write("<td style=\"background-color:#D3D3D3\"><b>Regione</b></td><td style=\"background-color:#D3D3D3\"><b>Occupazione TI</b></td><td style=\"background-color:#D3D3D3\"><b>variazione TI</b></td><td style=\"background-color:#D3D3D3\"><b>Occupazione non TI</b></td><td style=\"background-color:#D3D3D3\"><b>variazione non TI</b></td></tr>");
-		
+				/*
 				for (Map.Entry<String, Occupazioni> entry : occupazionePosti.entrySet())
 				{
 					htmlWriter.write("<tr>");
 					htmlWriter.write("<td>" +entry.getKey() + "</td>");
-					htmlWriter.write("<td align='right' style=\"background-color:" + entry.getValue().getColoreTi() + "\">" +nf.format(entry.getValue().getPercentualeTI()) + "%</td>");
+					htmlWriter.write("<td align='right' style=\"background-color:" + entry.getValue().getColoreTi() + "\">" + entry.getValue().getOccupazioneTi() + "&nbsp;&nbsp;&nbsp;&nbsp;"+nf.format(entry.getValue().getPercentualeTI()) + "%</td>");
 					htmlWriter.write("<td align='right'>" +nf.format(entry.getValue().getVariazionePercentualeTI()) + " <img src="+entry.getValue().getSegnovariazionePercentualeTI() +".jpg height=\"20\" width=\"20\"></td>");
-					htmlWriter.write("<td align='right' style=\"background-color:" + entry.getValue().getColoreNonTi() +"\">" +nf.format(entry.getValue().getPercentualeNonTI()) + "%</td>");
+					htmlWriter.write("<td align='right' style=\"background-color:" + entry.getValue().getColoreNonTi() +"\">" +entry.getValue().getOccupazioneNonTi() + "&nbsp;&nbsp;&nbsp;&nbsp;"+  nf.format(entry.getValue().getPercentualeNonTI()) + "%</td>");
+					htmlWriter.write("<td align='right'>" +nf.format(entry.getValue().getVariazionePercentualeNonTI()) + " <img src=" + entry.getValue().getSegnovariazionePercentualeNonTI() +".jpg height=\"20\" width=\"20\"></td>");
+					htmlWriter.write("</tr>");
+					htmlWriter.write("\n");
+				}*/
+				
+				for (Map.Entry<String, Occupazioni> entry : occupazionePosti.entrySet())
+				{
+					htmlWriter.write("<tr>");
+					htmlWriter.write("<td>" +entry.getKey() + "</td>");
+					
+					htmlWriter.write("<td><table width=\"100%\"><tr><td align='left' style=\"background-color:" + entry.getValue().getColoreTi() + "\"><i>" + entry.getValue().getOccupazioneTi() + "</i></td><td align='right' style=\"background-color: "+ entry.getValue().getColoreTi() + "\"><b>"+nf.format(entry.getValue().getPercentualeTI()) + "%</b></td></tr></table></td>");
+					
+					htmlWriter.write("<td align='right'>" +nf.format(entry.getValue().getVariazionePercentualeTI()) + " <img src="+entry.getValue().getSegnovariazionePercentualeTI() +".jpg height=\"20\" width=\"20\"></td>");
+					//htmlWriter.write("<td align='right' style=\"background-color:" + entry.getValue().getColoreNonTi() +"\">" +entry.getValue().getOccupazioneNonTi() + "&nbsp;&nbsp;&nbsp;&nbsp;"+  nf.format(entry.getValue().getPercentualeNonTI()) + "%</td>");
+					
+					htmlWriter.write("<td><table width=\"100%\"><tr><td align='left' style=\"background-color:" + entry.getValue().getColoreNonTi() + "\"><i>" + entry.getValue().getOccupazioneNonTi() + "</i></td><td align='right' style=\"background-color: "+ entry.getValue().getColoreNonTi() + "\"><b>"+nf.format(entry.getValue().getPercentualeNonTI()) + "%</b></td></tr></table></td>");
+					
 					htmlWriter.write("<td align='right'>" +nf.format(entry.getValue().getVariazionePercentualeNonTI()) + " <img src=" + entry.getValue().getSegnovariazionePercentualeNonTI() +".jpg height=\"20\" width=\"20\"></td>");
 					htmlWriter.write("</tr>");
 					htmlWriter.write("\n");
 				}
+									
 												
 												
 			htmlWriter.write("</table>");
@@ -392,5 +439,34 @@ public class Main {
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }
+	
+	public static Map<String, PostiLetto> LeggiPostiLetto(File file) throws IOException
+	{
+		String regione = "";
+		
+		Map<String, PostiLetto> postiDisponibili = new HashMap<String, PostiLetto>();
+		Document doc = Jsoup.parse(file ,"UTF-8");
+		Element tabella = doc.getElementById("tab2_body");
+		Elements trs =tabella.getElementsByTag("tr");
+		
+		for(Element tr: trs)
+		{
+			//System.out.println(tr);
+			regione = tr.getElementsByTag("th").get(0).text();
+			if (regione.equalsIgnoreCase("Italia"))
+			{
+				continue;
+			}
+			System.out.println(regione);
+			Elements td = tr.getElementsByTag("td");
+			System.out.println(td);
+			postiDisponibili.put(regione, new PostiLetto(td.get(3).text().replace(".", ""), td.get(1).text().replace(".","")));
+		}
+		
+		return postiDisponibili;
+	};
+	
+	
+	
 
 }

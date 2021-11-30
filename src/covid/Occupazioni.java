@@ -11,6 +11,8 @@ public class Occupazioni {
 	private String segnovariazionePercentualeTI;
 	private String coloreTi;
 	private String coloreNonTi;
+	private String occupazioneTi;
+	private String occupazioneNonTi;
 	
 	public double getPercentualeTI() {
 		return percentualeTI;
@@ -64,12 +66,15 @@ public class Occupazioni {
 		this.segnovariazionePercentualeTI = segnovariazionePercentualeTI;
 	}
 	public Occupazioni(double percentualeTI, double variazionePercentualeTI, double percentualeNonTI,
-			double variazionePercentualeNonTI) {
+			double variazionePercentualeNonTI,String occupazioneTi, String occupazioneNonTi) {
 		super();
 		this.percentualeTI = percentualeTI;
 		this.variazionePercentualeTI = variazionePercentualeTI;
 		this.percentualeNonTI = percentualeNonTI;
 		this.variazionePercentualeNonTI = variazionePercentualeNonTI;
+		this.occupazioneTi = occupazioneTi;
+		this.occupazioneNonTi = occupazioneNonTi;
+		
 		if(variazionePercentualeTI>0)
 		{
 			segnovariazionePercentualeTI = "su";
@@ -104,29 +109,29 @@ public class Occupazioni {
 		 * rosso 30 e 40
 		 * */
 		
-		if (percentualeTI>30)
+		if (percentualeTI>=30)
 		{
 			coloreTi = costanti.ROSSO;
 		}
-		else if (percentualeTI>20)
+		else if (percentualeTI>=20)
 		{
 			coloreTi = costanti.ARANCIONE;
 		}
-		else if(percentualeTI>10)
+		else if(percentualeTI>=10)
 		{
 			coloreTi = costanti.GIALLO;
 		}
 		
 
-		if (percentualeNonTI>40)
+		if (percentualeNonTI>=40)
 		{
 			coloreNonTi = costanti.ROSSO;
 		}
-		else if (percentualeNonTI>30)
+		else if (percentualeNonTI>=30)
 		{
 			coloreNonTi = costanti.ARANCIONE;
 		}
-		else if(percentualeNonTI>15)
+		else if(percentualeNonTI>=15)
 		{
 			coloreNonTi = costanti.GIALLO;
 		}
@@ -135,7 +140,22 @@ public class Occupazioni {
 		
 		
 	}
+	
+	
+	
 
+	public String getOccupazioneTi() {
+		return occupazioneTi;
+	}
+	public void setOccupazioneTi(String occupazioneTi) {
+		this.occupazioneTi = occupazioneTi;
+	}
+	public String getOccupazioneNonTi() {
+		return occupazioneNonTi;
+	}
+	public void setOccupazioneNonTi(String occupazioneNonTi) {
+		this.occupazioneNonTi = occupazioneNonTi;
+	}
 	public String toString()
 	{
 		NumberFormat nf = NumberFormat.getInstance();
