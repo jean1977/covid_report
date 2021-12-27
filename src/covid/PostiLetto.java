@@ -48,10 +48,15 @@ public class PostiLetto {
 	
 	private double percentualeOccupazioneTi(PostiLetto disponibili) {
 		double risultato = (Double.valueOf(this.getTi()) /  Double.valueOf(disponibili.getTi()))*100;
+		
+		
 		if (Double.isNaN(risultato))
 		{
 			return 0;
 		}
+		
+		 risultato = (double) Math.round(risultato * 100) / 100;
+		
 		return risultato;
 	}
 
@@ -66,6 +71,7 @@ public class PostiLetto {
 		{
 			return 0;
 		}
+		risultato = (double) Math.round(risultato * 100) / 100;
 		return risultato;
 	}
 	

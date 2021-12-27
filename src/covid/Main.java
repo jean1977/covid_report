@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -31,6 +32,10 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 		// TODO Auto-generated method stub
 
+		
+		/*
+		 * E' necessario scaricare questo url https://www.agenas.gov.it/covid19/web/index.php?r=site%2Ftab2
+		 * */
 
 		
 		String linkNazionale = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv";
@@ -210,17 +215,27 @@ public class Main {
 		    
 			
 		    while ((line = occupazioneOggi.readLine()) != null) {
-			    if (line.substring(0, 10).equalsIgnoreCase(dataOdierna))
-			    {
-			    	String[] linea = line.split(separatore,-1);
-			    	occupazioneOggiMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
-			    }
+		    	//System.out.println(line);
+		    	
+		    	if (line.isEmpty())
+		    	{
+		    		
+		    	}
+		    	else
+		    	{
+				    if (dataOdierna.equalsIgnoreCase(line.substring(0, 10)))
+				    {
+				    	String[] linea = line.split(separatore,-1);
+				    	occupazioneOggiMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
+				    }
+				    
+				    if (line.substring(0, 10).equalsIgnoreCase(dataIeri))
+				    {
+				    	String[] linea = line.split(separatore,-1);
+				    	occupazioneIeriMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
+				    }
+		    	}
 			    
-			    if (line.substring(0, 10).equalsIgnoreCase(dataIeri))
-			    {
-			    	String[] linea = line.split(separatore,-1);
-			    	occupazioneIeriMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
-			    }
 
 		    	
 		    	//line = occupazioneOggi.readLine();		    
@@ -231,7 +246,7 @@ public class Main {
 		
 		
 	     
-		Map<String, Occupazioni> occupazionePosti = new HashMap<String, Occupazioni>();
+		Map<String, Occupazioni> occupazionePosti = new TreeMap<String, Occupazioni>();
 
 		
 		
