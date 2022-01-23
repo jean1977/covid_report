@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,9 +34,7 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		
-		/*
-		 * E' necessario scaricare questo url https://www.agenas.gov.it/covid19/web/index.php?r=site%2Ftab2
-		 * */
+		
 
 		
 		String linkNazionale = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv";
@@ -46,13 +45,18 @@ public class Main {
 		
 		File fileRegione = new File("d:\\file_covid\\dpc-covid19-ita-regioni.csv");
 		File fileNazione = new File("d:\\file_covid\\dpc-covid19-ita-andamento-nazionale.csv");
+		
+		/*
+		 * E' necessario scaricare questo url https://www.agenas.gov.it/covid19/web/index.php?r=site%2Ftab2
+		 * */
+		
 		File fileOccupazione = new File("d:\\file_covid\\Portale Covid-19.html");
 		
 		
 		Map<String, PostiLetto> postiDisponibili = new HashMap<String, PostiLetto>();
 		
 		postiDisponibili = LeggiPostiLetto(fileOccupazione);
-		
+		String aggiornamentoDisponibili = LeggiAggiornamento(fileOccupazione);
 		
 		
 		FileUtils.copyURLToFile(urlRegionale, fileRegione);
@@ -102,9 +106,15 @@ public class Main {
 		Date currentDate = sdf.parse(ultimoNazionale.substring(0, 10));
 		String date=sdf2.format(currentDate );
 		
-		System.out.println(date);
+		/*System.out.println(date);
 		System.out.println(currentDate);
 		
+		*/
+		
+		   Locale.setDefault(Locale.ITALIAN);
+		   SimpleDateFormat sdf3 = new SimpleDateFormat("dd MMMM yyyy"); 
+		   String dataStringaFull = sdf3.format(currentDate);
+		   System.out.println(dataStringaFull); 
 		
 		ArrayList<Integer> indexNazionaleValido = new ArrayList<Integer>();
 		
@@ -213,7 +223,8 @@ public class Main {
 		    	occupazioneIeriMap.put(linea[3], new Occupazione(linea[7],linea[6]));
 		    }*/
 		    
-			
+		    
+		    
 		    while ((line = occupazioneOggi.readLine()) != null) {
 		    	//System.out.println(line);
 		    	
@@ -225,12 +236,14 @@ public class Main {
 		    	{
 				    if (dataOdierna.equalsIgnoreCase(line.substring(0, 10)))
 				    {
+				    	System.out.println(line);
 				    	String[] linea = line.split(separatore,-1);
 				    	occupazioneOggiMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
 				    }
 				    
 				    if (line.substring(0, 10).equalsIgnoreCase(dataIeri))
 				    {
+				    	System.out.println(line);
 				    	String[] linea = line.split(separatore,-1);
 				    	occupazioneIeriMap.put(linea[3], new PostiLetto( linea[7],linea[6]));
 				    }
@@ -439,8 +452,10 @@ public class Main {
 
 		
 		
-		
-		htmlWriter.write("</td></tr></table>");
+		htmlWriter.write("</td></tr>");
+		htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento posti disponibili: <b>" + aggiornamentoDisponibili + "</b></td></tr>");
+		htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento altri dati: <b>" + dataStringaFull + "</b></td></tr>");
+		htmlWriter.write("</table>");
 		htmlWriter.write("</body></html>");
 		htmlWriter.close();
 		
@@ -480,7 +495,30 @@ public class Main {
 		
 		return postiDisponibili;
 	};
-	
+
+	public static String LeggiAggiornamento(File file) throws IOException
+	{
+		String regione = "";
+		
+		Map<String, PostiLetto> postiDisponibili = new HashMap<String, PostiLetto>();
+		Document doc = Jsoup.parse(file ,"UTF-8");
+		Elements aggiornamenti = doc.getElementsByClass("badge");
+		
+		String aggiornamento ="";
+		
+		for (Element agg : aggiornamenti)
+		{
+			if (agg.text().contains("Protezione"))
+			{
+				aggiornamento = agg.text();
+				aggiornamento = aggiornamento.replace("Dati della Protezione Civile del ", "");
+				break;
+			}
+		}
+		
+		
+		return aggiornamento;
+	};
 	
 	
 
