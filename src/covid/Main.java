@@ -411,6 +411,9 @@ public class Main {
 			
 		htmlWriter.write("</table>");
 		
+		htmlWriter.write("<table><tr><td>Aggiornamento posti disponibili: <b>" + aggiornamentoDisponibili + " </b></td></tr>");
+		htmlWriter.write("<tr><td>Aggiornamento altri dati: <b>" + dataStringaFull + "</b></td></tr></table>");
+		
 		htmlWriter.write("</td><td>");									
 		
 		htmlWriter.write("<table border=1>");
@@ -453,8 +456,8 @@ public class Main {
 		
 		
 		htmlWriter.write("</td></tr>");
-		htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento posti disponibili: <b>" + aggiornamentoDisponibili + "</b></td></tr>");
-		htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento altri dati: <b>" + dataStringaFull + "</b></td></tr>");
+		//htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento posti disponibili: <b>" + aggiornamentoDisponibili + "</b></td></tr>");
+		//htmlWriter.write("<tr><td>&nbsp;</td><td>Aggiornamento altri dati: <b>" + dataStringaFull + "</b></td></tr>");
 		htmlWriter.write("</table>");
 		htmlWriter.write("</body></html>");
 		htmlWriter.close();
@@ -512,6 +515,7 @@ public class Main {
 			{
 				aggiornamento = agg.text();
 				aggiornamento = aggiornamento.replace("Dati della Protezione Civile del ", "");
+				aggiornamento = aggiornamento.substring(0, aggiornamento.length() - 9);
 				break;
 			}
 		}
